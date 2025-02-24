@@ -16,13 +16,26 @@ import JobPost from '../screens/JobPost/JobPost';
 import Setting from '../screens/Setting/setting';
 import Profile from '../screens/Profile/Profile';
 import { colors } from '../utils/Colors';
+import { createStackNavigator } from '@react-navigation/stack';
+import UpdateProfile from '../screens/Profile/UpdateProfile';
 
 export default function HomeNavigator() {
-  const Tab = createBottomTabNavigator();
+  const Stack = createStackNavigator();
 
+  const Tab = createBottomTabNavigator();
+  function ProfileStack() {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="UserProfileUpdate" component={UpdateProfile} />
+      </Stack.Navigator>
+    );
+  }
   return (
     <Tab.Navigator
-
       screenOptions={{
         tabBarActiveTintColor: '#fff', 
         tabBarInactiveTintColor: '#fff', 
@@ -70,7 +83,6 @@ export default function HomeNavigator() {
       <Tab.Screen
         name="Add"
         component={JobPost}
-
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
@@ -105,7 +117,7 @@ export default function HomeNavigator() {
       />
       <Tab.Screen
         name="Profile"
-        component={Profile}
+        component={ProfileStack}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
@@ -123,3 +135,4 @@ export default function HomeNavigator() {
     </Tab.Navigator>
   );
 }
+

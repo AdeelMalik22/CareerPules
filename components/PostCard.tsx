@@ -15,6 +15,8 @@ interface props {
   handleApply?: () => void;
   handleDelete?: () => void;
   handleReport?: () => void;
+  status?: boolean,
+  statusText?: string
 }
 const PostCard = ({
   Category,
@@ -28,6 +30,8 @@ const PostCard = ({
   handleDelete,
   handleReport,
   popOverRef,
+  status,
+  statusText
 }: props) => {
   const [showPopover, setShowPopover] = useState(false);
 
@@ -99,12 +103,20 @@ const PostCard = ({
       </View>
 
       <View style={styles.actionButtons}>
-        <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
+      <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
           <Text style={styles.applyButtonText}>
             {' '}
             {watch ? 'Visit' : 'Apply Now'}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> 
+        {status?
+         <View style={styles.StatusButton} >
+          <Text style={styles.StatusButtonText}>
+            {statusText ||"Pending"}
+          </Text>
+        </View>
+      :''
+      }
       </View>
     </View>
   );
@@ -168,10 +180,11 @@ const styles = StyleSheet.create({
     fontWeight: 500,
   },
   actionButtons: {
+    display: "flex",
     flexDirection: 'row',
     gap: 10,
     alignItems: 'center',
-    alignContent: 'center',
+    justifyContent:"space-between",
     height: 50,
     borderTopWidth: 1,
     borderTopColor: `${colors.gold}`,
@@ -192,6 +205,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 8,
     paddingHorizontal: 16,
+  },
+  StatusButton:{
+    backgroundColor: `${colors.gold}`,
+    // opacity: 0.5,
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderTopEndRadius: 30,
+    borderBottomEndRadius: 30,
+  },
+  StatusButtonText:{
+     color: `${colors.white}`,
+    fontWeight: 'bold'
   },
   applyButtonText: {
     color: textColor,

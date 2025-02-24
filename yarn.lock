@@ -5795,6 +5795,11 @@ react-native-gesture-handler@^2.22.1, "react-native-gesture-handler@>= 2.0.0":
     hoist-non-react-statics "^3.3.0"
     invariant "^2.2.4"
 
+react-native-image-picker@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-8.1.0.tgz"
+  integrity sha512-qD0pivr2LkzdCNRl5CyawldZA2o0YWsK3f4gh3086WzRiwYFoe+ksa+ggub1QD4opz/oS7YpIRzWwfHSoLFEog==
+
 react-native-popover-view@^6.1.0:
   version "6.1.0"
   resolved "https://registry.npmjs.org/react-native-popover-view/-/react-native-popover-view-6.1.0.tgz"
@@ -5802,6 +5807,11 @@ react-native-popover-view@^6.1.0:
   dependencies:
     deprecated-react-native-prop-types "^2.3.0"
     prop-types "^15.8.1"
+
+react-native-radio-buttons-group@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/react-native-radio-buttons-group/-/react-native-radio-buttons-group-3.1.0.tgz"
+  integrity sha512-DiNM1yI6WfRygUZ+Z/bsjggyLypXsxRNXPNYpPHXSEVbRD6uF5Aei+HMIwyeRbfMKPtHwLq7cGsmUDV01i+rOQ==
 
 react-native-reanimated@^3.16.7:
   version "3.16.7"

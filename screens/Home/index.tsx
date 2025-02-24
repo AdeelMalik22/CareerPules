@@ -1,9 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   View,
-  Text,
   ScrollView,
-  TouchableOpacity,
   TextInput,
   StyleSheet,
   Alert,
@@ -13,21 +11,40 @@ import Header from '../../components/Header';
 import PostCard from '../../components/PostCard';
 import {colors, textColor} from '../../utils/Colors';
 import DummyData from '../../utils/eventData.json';
+import CustomPopover from '../../components/CustomPopover';
+import {RadioGroup} from 'react-native-radio-buttons-group';
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [popoverVisible, setPopoverVisible] = useState(false);
+  const [selectedId, setSelectedId] = useState<any>();
+  const [getFilterName, setFilterName] = useState('');
 
-  // const toggleFavorite = (postId) => {
-  //   setPosts((prevPosts) =>
-  //     prevPosts.map((post) =>
-  //       post.id === postId ? { ...post, isFavorite: !post.isFavorite } : post
-  //     )
-  //   );
-  // };
+  const radioButtons = useMemo(
+    () => [
+      {
+        id: '1',
+        label: 'Remote',
+        value: 'remote',
+      },
+      {
+        id: '2',
+        label: 'Past 24 hours',
+        value: 'past24hours',
+      },
+    ],
+    [],
+  );
 
-  // const filteredPosts = posts.filter((post) =>
-  //   post.title.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
+  useEffect(() => {
+    if (selectedId) {
+      const getFilterName = radioButtons.filter(item => item.id === selectedId).map(item => item.label);
+      setFilterName(getFilterName[0]);
+    }
+  }, [selectedId]);
+  console.log("getFilterName",getFilterName)
+
+  const handleFilter = () => {};
   const handleReport = () => {
     Alert.alert('Reported');
   };
@@ -37,7 +54,6 @@ const Home = () => {
       {/* Header */}
       <Header profile={true} notification />
       <View style={styles.header}>
-        {/* <Text style={styles.headerTitle}>Job Board</Text> */}
         <View style={styles.searchContainer}>
           <TextInput
             style={styles.searchInput}
@@ -46,7 +62,32 @@ const Home = () => {
             placeholderTextColor={'#333'}
             onChangeText={setSearchQuery}
           />
-          {/* <Ionicons name="search" size={24} color="#000" /> */}
+
+          <CustomPopover
+            visible={popoverVisible}
+            iconImage={require('../../Assets/Icons/filter.png')}
+            iconStyle={styles.filter}
+            onClose={() => setPopoverVisible(false)}
+            handleIsVisible={() => setPopoverVisible(true)}
+            Children={
+              <View style={styles.popover}>
+                <RadioGroup
+                  radioButtons={radioButtons}
+                  onPress={setSelectedId}
+                  selectedId={selectedId}
+                  layout="column"
+                  labelStyle={{
+                    color: textColor,
+                    fontSize: 16,
+                  }}
+                  containerStyle={{
+                    alignItems: 'flex-start',
+                    justifyContent: 'flex-start',
+                  }}
+                />
+              </View>
+            }
+          />
         </View>
       </View>
 
@@ -149,6 +190,19 @@ const styles = StyleSheet.create({
   applyButtonText: {
     color: textColor,
     fontWeight: 'bold',
+  },
+  filter: {
+    width: 25,
+    height: 25,
+    marginLeft: 10,
+  },
+  popover: {
+    backgroundColor: `${colors.white}`,
+    flex: 1,
+    padding: 10,
+    borderRadius: 8,
+    width: '100%',
+    gap: 4,
   },
 });
 
