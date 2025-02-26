@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { colors, textColor } from '../utils/Colors';
 import CustomPopover from './CustomPopover';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface props {
   profile?: boolean,
@@ -17,8 +18,11 @@ const handProfile = () => {
   setPopoverVisible(false)
 }
 const handLogout = () => {
-  navigation.navigate('Login')
-  setPopoverVisible(false)
+  // console.log('token',token)
+   AsyncStorage.removeItem('token')
+  return navigation.navigate('Login')
+
+  // setPopoverVisible(false)
 }
   return (
     <View style={[styles.container, profile && styles.profileContainer]}>

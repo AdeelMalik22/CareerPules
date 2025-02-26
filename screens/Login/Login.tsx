@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -10,56 +10,36 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { colors } from '../../utils/Colors';
+import {useNavigation} from '@react-navigation/native';
+import {colors} from '../../utils/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showEnterprise, setShowEnterprise] = useState(false);
-const navigation = useNavigation();
+  const navigation = useNavigation();
   const handleLogin = () => {
-    setShowEnterprise(true);
+    // setShowEnterprise(true);
+    handleLogin1()
   };
 
   function handleLogin1() {
-    navigation.navigate("HomeNavigator");
+    const token = "SaimRamzan"
+    AsyncStorage.setItem('token', token);
+    // navigation.navigate('');
   }
-  
+
   const handleSignupGo = () => {
-    navigation.navigate('Signup')
-  }
+    navigation.navigate('Signup');
+  };
   return (
     <SafeAreaView style={styles.container}>
-      {/* <StatusBar barStyle="light-content" backgroundColor={`${colors.}`} /> */}
       <View style={styles.topSection}>
         <Text style={styles.logoText}>Career Pulse</Text>
       </View>
       <View style={styles.bottomSection}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {showEnterprise ? (
-      <View style={styles.enterpriseContainer}>
-      <Text style={styles.enterpriseTitle}>Career Pulse Enterprise</Text>
-      <Text style={styles.enterpriseDescription}>
-        Transformative collaboration for larger teams to drive productivity, streamline processes, and innovate faster. Unlock advanced features and support to elevate your team's performance.
-      </Text>
-    
-      <View style={styles.featuresList}>
-        <Text style={styles.featureText}><Text style={styles.featureTextCheckMark}>✔</Text> Advanced Collaboration Tools</Text>
-        <Text style={styles.featureText}><Text style={styles.featureTextCheckMark}>✔</Text> Enterprise-level Security</Text>
-        <Text style={styles.featureText}><Text style={styles.featureTextCheckMark}>✔</Text> Customizable Workflows</Text>
-        <Text style={styles.featureText}><Text style={styles.featureTextCheckMark}>✔</Text> 24/7 Support and Training</Text>
-      </View>
-    
-      <TouchableOpacity style={styles.getStartedButton}>
-        <Text style={styles.getStartedText} onPress={handleLogin1} >Get Started</Text>
-      </TouchableOpacity>
-    
-      <Text style={styles.footerText}>
-        Ready to take your team to the next level? Join Career Pulse Enterprise now and start transforming your team’s workflow.
-      </Text>
-    </View>
-    
-          ) : (
+
             <View style={styles.loginContainer}>
               <Text style={styles.welcomeText}>Welcome Back</Text>
               <Text style={styles.subtitle}>Enter your details below</Text>
@@ -69,7 +49,7 @@ const navigation = useNavigation();
                 placeholder="Email Address"
                 placeholderTextColor="#aaa"
                 value={email}
-                onChangeText={(text) => setEmail(text)}
+                onChangeText={text => setEmail(text)}
               />
 
               <TextInput
@@ -78,15 +58,19 @@ const navigation = useNavigation();
                 placeholderTextColor="#aaa"
                 secureTextEntry
                 value={password}
-                onChangeText={(text) => setPassword(text)}
+                onChangeText={text => setPassword(text)}
               />
 
-              <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={handleLogin}>
                 <Text style={styles.loginButtonText}>Sign In</Text>
               </TouchableOpacity>
 
               <TouchableOpacity>
-                <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
+                <Text style={styles.forgotPasswordText}>
+                  Forgot your password?
+                </Text>
               </TouchableOpacity>
 
               <Text style={styles.orText}>Or sign in with</Text>
@@ -110,7 +94,7 @@ const navigation = useNavigation();
                 </TouchableOpacity>
               </View>
             </View>
-          )}
+          {/* )} */}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -160,36 +144,36 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 50,
     borderWidth: 1,
-    borderColor: `${colors.gold}`, 
+    borderColor: `${colors.gold}`,
     borderRadius: 25,
-    paddingHorizontal: 20,  
+    paddingHorizontal: 20,
     backgroundColor: '#fff',
-    marginBottom: 20,  
+    marginBottom: 20,
     fontSize: 16,
     color: '#333',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    // elevation: 3,  
+    // elevation: 3,
   },
   loginButton: {
-    backgroundColor: `${colors.gold}`,  
+    backgroundColor: `${colors.gold}`,
     paddingVertical: 15,
     borderRadius: 25,
     width: '50%',
     marginBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',  
-    shadowOffset: { width: 0, height: 2 },
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    // elevation: 3, 
+    // elevation: 3,
   },
   loginButtonText: {
     color: `${colors.black}`,
-    fontSize: 18, 
+    fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -279,13 +263,13 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 16,
-    color: `${colors.black}`,  
+    color: `${colors.black}`,
     marginBottom: 10,
     textAlign: 'left',
   },
-  featureTextCheckMark:{
+  featureTextCheckMark: {
     fontSize: 16,
-    color: `${colors.gold}`,  
+    color: `${colors.gold}`,
     marginBottom: 10,
     textAlign: 'left',
   },

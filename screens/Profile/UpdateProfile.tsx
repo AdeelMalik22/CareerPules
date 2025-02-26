@@ -12,7 +12,7 @@ import Header from '../../components/Header';
 import { colors } from '../../utils/Colors';
 
 function UpdateProfile() {
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<any>(null);
 
   const selectImage = () => {
     launchImageLibrary({ mediaType: 'photo' }, (response) => {

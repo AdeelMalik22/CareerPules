@@ -1,25 +1,97 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
-import { colors } from '../../utils/Colors';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  Modal,
+  ActivityIndicator,
+} from 'react-native';
+import {colors} from '../../utils/Colors';
+import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
+
 
 export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const [otpModalVisible, setOtpModalVisible] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation() 
   const handleSignup = () => {
-    // Here you can handle the signup logic
-    if (name && email && password) {
-      Alert.alert('Signup Successful!', `Welcome, ${name}`);
-    } else {
-      Alert.alert('Error', 'Please fill in all fields');
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (name === '' ||  email === '' || password === ''){
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please Enter Filed',
+        position: 'top',
+        visibilityTime: 3000,
+      })
+    }else if(password.length < 6){
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Password must be at least 6 characters',
+        position: 'top',
+        visibilityTime: 3000,
+      })
+    }else if(reg.test(email )=== false){
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please Enter Valid Email',
+        position: 'top',
+        visibilityTime: 3000,
+      })
+    }else{
+      setOtpModalVisible(true)
     }
   };
+const handleOtpSubmit = () => {
+  
+  const otpOutPut = "123456"
+  if (otp === otpOutPut){
+    setOtpModalVisible(false)
+    setOtp("")
+    Toast.show({
+      type: 'success',
+      text1: 'Success',
+      text2: 'OTP verified successfully',
+      position: 'top',
+      visibilityTime: 3000,
+    });
+    // navigation.navigate("Login")
+   }else if (otp !== otpOutPut){
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'Please Enter Correct OTP',
+      position: 'top',
+      visibilityTime: 3000,
+    })
+   }else{
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'Please enter OTP',
+      position: 'top',
+      visibilityTime: 3000,
+    })
+  }
+   
 
+}
+console.log("otp",otp)
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Create Account</Text>
-   <Text style={styles.heading}>Career Pulse</Text>
+      <Text style={styles.heading}>Career Pulse</Text>
       <Text style={styles.subHeading}>Welcome Back!</Text>
       <TextInput
         style={styles.input}
@@ -28,7 +100,7 @@ export default function Signup() {
         onChangeText={setName}
         placeholderTextColor={'#333'}
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -37,7 +109,7 @@ export default function Signup() {
         onChangeText={setEmail}
         placeholderTextColor={'#333'}
       />
-      
+
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -47,9 +119,27 @@ export default function Signup() {
         placeholderTextColor={'#333'}
       />
 
- <TouchableOpacity style={styles.button}>
+      <TouchableOpacity onPress={handleSignup} style={styles.button}>
         <Text style={styles.buttonText}>SignUp</Text>
-      </TouchableOpacity>    </View>
+      </TouchableOpacity>
+      <Modal visible={otpModalVisible} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>OTP Authentication</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter OTP"
+              keyboardType="numeric"
+              onChangeText={setOtp}
+              maxLength={6}
+            />
+            <TouchableOpacity style={styles.button} onPress={handleOtpSubmit}>
+              {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.buttonText}>Verify OTP</Text>}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 }
 
@@ -63,10 +153,9 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 26,
     fontWeight: 'bold',
-     marginBottom: 20,
+    marginBottom: 20,
     textAlign: 'center',
     color: `${colors.black}`,
-
   },
   button: {
     width: '100%',
@@ -103,8 +192,26 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 15,
     paddingLeft: 10,
-    color:"#333",
-    
+    color: '#333',
+
     fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    width: "80%",
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 15,
   },
 });
