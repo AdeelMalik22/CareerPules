@@ -23,10 +23,12 @@ const Login = () => {
     handleLogin1()
   };
 
-  function handleLogin1() {
+  async function  handleLogin1  () {
     const token = "SaimRamzan"
-    AsyncStorage.setItem('token', token);
-    // navigation.navigate('');
+    const myTokan = AsyncStorage.getItem('token')
+    await AsyncStorage.setItem('token', token);
+    console.log("myTokan",myTokan)
+    navigation.navigate('Home');
   }
 
   const handleSignupGo = () => {
