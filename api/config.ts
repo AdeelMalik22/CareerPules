@@ -1,5 +1,5 @@
 export const defaultConfig = {
-    API_URL: 'https://nate-davenport-33982-staging.botics.co/',
+    API_URL: 'http://13.229.224.211/api/',
   };
   
   export const App = {

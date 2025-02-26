@@ -18,11 +18,13 @@ import Profile from '../screens/Profile/Profile';
 import { colors } from '../utils/Colors';
 import { createStackNavigator } from '@react-navigation/stack';
 import UpdateProfile from '../screens/Profile/UpdateProfile';
+import Login from '../screens/Login/Login';
 
 export default function HomeNavigator() {
   const Stack = createStackNavigator();
 
   const Tab = createBottomTabNavigator();
+  
   function ProfileStack() {
     return (
       <Stack.Navigator
@@ -31,6 +33,18 @@ export default function HomeNavigator() {
         }}>
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="UserProfileUpdate" component={UpdateProfile} />
+      </Stack.Navigator>
+    );
+  }
+
+  function HomeStack() {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     );
   }
@@ -48,7 +62,7 @@ export default function HomeNavigator() {
     >
       <Tab.Screen
         name="Home"
-        component={Home}
+        component={HomeStack}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
@@ -63,23 +77,6 @@ export default function HomeNavigator() {
           ),
         }}
       />
-      {/* <Tab.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({focused}) => (
-            <Image
-              source={Search}
-              style={{
-                width: 24,
-                height: 24,
-                tintColor: focused ? '#8b5cf6' : '#888', 
-              }}
-            />
-          ),
-        }}
-      /> */}
       <Tab.Screen
         name="Add"
         component={JobPost}

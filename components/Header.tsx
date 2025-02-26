@@ -17,12 +17,10 @@ const handProfile = () => {
   navigation.navigate('Profile')
   setPopoverVisible(false)
 }
-const handLogout = () => {
+const handLogout = async () => {
   // console.log('token',token)
-   AsyncStorage.removeItem('token')
-  return navigation.navigate('Login')
-
-  // setPopoverVisible(false)
+   await AsyncStorage.removeItem('token')
+   navigation.navigate('Login')
 }
   return (
     <View style={[styles.container, profile && styles.profileContainer]}>

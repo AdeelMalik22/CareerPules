@@ -23,7 +23,7 @@ export default function StackNavigator() {
   }, [navigation]);
 
   return (
-    <Stack.Navigator initialRouteName="Splash">
+    <Stack.Navigator  initialRouteName="Splash">
       <Stack.Screen
         name="Splash"
         component={Splash}
