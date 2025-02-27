@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,22 +10,26 @@ import {
   Modal,
   ActivityIndicator,
 } from 'react-native';
-import {colors} from '../../utils/Colors';
+import { colors } from '../../utils/Colors';
 import { useNavigation } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import { registerUser, registerUserOtp } from '../../api/auth';
 
 
 export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [number, setNumber] = useState('');
   const [password, setPassword] = useState('');
   const [otpModalVisible, setOtpModalVisible] = useState(false);
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation() 
-  const handleSignup = () => {
+  const navigation = useNavigation()
+
+  const handleSignup = async () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if (name === '' ||  email === '' || password === ''){
+    const numberReg = /^\+[1-9]{1}[0-9]{3,14}$/
+    if (name === '' || email === '' || password === '' || number === '') {
       Toast.show({
         type: 'error',
         text1: 'Error',
@@ -33,15 +37,15 @@ export default function Signup() {
         position: 'top',
         visibilityTime: 3000,
       })
-    }else if(password.length < 6){
+    } else if (password.length < 8) {
       Toast.show({
         type: 'error',
         text1: 'Error',
-        text2: 'Password must be at least 6 characters',
+        text2: 'Password must be at least 8 characters',
         position: 'top',
         visibilityTime: 3000,
       })
-    }else if(reg.test(email )=== false){
+    } else if (reg.test(email) === false) {
       Toast.show({
         type: 'error',
         text1: 'Error',
@@ -49,45 +53,106 @@ export default function Signup() {
         position: 'top',
         visibilityTime: 3000,
       })
-    }else{
-      setOtpModalVisible(true)
+    } else if (numberReg.test(number) === false) {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please Enter Valid Number',
+        position: 'top',
+        visibilityTime: 3000,
+      })
+    } else {
+      try {
+        const payload = {
+          "email": email,
+          "username": name,
+          "phone_number": number,
+          "password": password,
+        }
+
+
+        await registerUser(payload as any).then((res) => {
+          if (res.status === 201) {
+            setOtpModalVisible(true)
+            Toast.show({
+              type: 'success',
+              text1: 'Success',
+              text2: "Successfully Signup",
+              position: 'top',
+              visibilityTime: 3000,
+            })
+          }
+        }).catch(reason => {
+          const { email, username } = reason.response.data
+          Toast.show({
+            type: 'error',
+            text1: 'Error',
+            text2: email || username,
+            position: 'top',
+            visibilityTime: 3000,
+          });
+        })
+
+      } catch (error) {
+        // console.error("Error during signup ----------:", error.message);
+        // Toast.show({
+        //     type: 'error',
+        //     text1: 'Error',
+        //     text2: 'Signup Failed: ' + error.message,
+        //     position: 'top',
+        //     visibilityTime: 3000,
+        // });
+      }
     }
   };
-const handleOtpSubmit = () => {
-  
-  const otpOutPut = "123456"
-  if (otp === otpOutPut){
-    setOtpModalVisible(false)
-    setOtp("")
-    Toast.show({
-      type: 'success',
-      text1: 'Success',
-      text2: 'OTP verified successfully',
-      position: 'top',
-      visibilityTime: 3000,
-    });
-    // navigation.navigate("Login")
-   }else if (otp !== otpOutPut){
-    Toast.show({
-      type: 'error',
-      text1: 'Error',
-      text2: 'Please Enter Correct OTP',
-      position: 'top',
-      visibilityTime: 3000,
-    })
-   }else{
-    Toast.show({
-      type: 'error',
-      text1: 'Error',
-      text2: 'Please enter OTP',
-      position: 'top',
-      visibilityTime: 3000,
-    })
-  }
-   
+  const handleOtpSubmit = () => {
 
-}
-console.log("otp",otp)
+    //  setOtpModalVisible(false)
+
+    const otpPayload = {
+      "email": email,
+      "otp": otp
+    }
+    if (otp.trim() === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please enter OTP',
+        position: 'top',
+        visibilityTime: 3000,
+      })
+    } else {
+      registerUserOtp(otpPayload as any).then(async (res) => {
+        console.log("res.status", res.status)
+        if (res.status === 200) {
+          await setOtpModalVisible(false)
+          setOtp("")
+          setEmail("")
+          setName("")
+          setNumber("")
+          setPassword("")
+          Toast.show({
+            type: 'success',
+            text1: 'Success',
+            text2: 'OTP verified successfully',
+            position: 'top',
+            visibilityTime: 3000,
+          });
+        }
+      }).catch((errorRes) => {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: errorRes.response.data.error,
+          position: 'top',
+          visibilityTime: 3000,
+        })
+        console.log("errrorRes", errorRes.response.data.error)
+      })
+    }
+
+  }
+  console.log("otp", otp)
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Create Account</Text>
@@ -107,6 +172,14 @@ console.log("otp",otp)
         keyboardType="email-address"
         value={email}
         onChangeText={setEmail}
+        placeholderTextColor={'#333'}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Number with code"
+        keyboardType="number-pad"
+        value={number}
+        onChangeText={setNumber}
         placeholderTextColor={'#333'}
       />
 

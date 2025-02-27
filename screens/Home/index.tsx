@@ -42,7 +42,6 @@ const Home = () => {
       setFilterName(getFilterName[0]);
     }
   }, [selectedId]);
-  console.log("getFilterName",getFilterName)
 
   const handleFilter = () => {};
   const handleReport = () => {

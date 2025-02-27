@@ -44,7 +44,6 @@ export default function HomeNavigator() {
           headerShown: false,
         }}>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     );
   }

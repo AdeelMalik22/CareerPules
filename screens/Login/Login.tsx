@@ -13,6 +13,8 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {colors} from '../../utils/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setItem } from '../../utils/Function';
+import { loginUser } from '../../api/auth';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,14 +24,23 @@ const Login = () => {
     // setShowEnterprise(true);
     handleLogin1()
   };
-// hello
-  async function  handleLogin1  () {
-    const token = "SaimRamzan"
-    const myTokan = AsyncStorage.getItem('token')
-    await AsyncStorage.setItem('token', token);
-    // console.log("myTokan",myTokan)
-    navigation.navigate('Home');
+
+const handleLogin1 = async () => {
+  const payload = {
+    "email": email,
+    "password": password,
+  };
+
+  try {
+      await loginUser(payload as any).then(async(res) => {
+        const token = res.data.access
+        await AsyncStorage.setItem("token", token)
+      });
+  } catch (error) {
+      console.log("Login error: ", error);
   }
+}
+
 
   const handleSignupGo = () => {
     navigation.navigate('Signup');

@@ -1,45 +1,42 @@
-import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getItem } from "../../utils/Function";
+import { registerUser } from "../../api/auth";
 
-export const handleSignUp = createAsyncThunk(
-    'user/fetchUserProfile',
-    async params => {
-      try {
-        const token = await getItem('token');
-        const loginUser = await getItem('loginUser');
-        const userData = JSON.parse(loginUser);
-        const response = await registerUser(userData?.id, token, params);
-        return response.data;
-      } catch (error) {
-        const errorText = Object.values(error?.response?.data);
-      }
-    },
-  );\
+// export const handleSignUp = createAsyncThunk('user/registerUser', async ({payload}:any) => {
+//     try {
+//         console.log("payload------>", payload)
+//         const token = await getItem('token');
+//         const response = await registerUser({payload, token});
+//         console.log("response--------",response)
+//         // return response.data;
+//     } catch (error) {
+//         // Handle error correctly here, return error message for rejected case
+//         throw new Error(error?.response?.data?.message || 'Something went wrong');
+//     }
+// });
 
-
-  const userSlice = createSlice({
+const userSlice = createSlice({
     name: 'user',
     initialState: {
-     userLogin: [],
-     userLoginPending: false,
-     userLoginError: null,
+        userLoginData: [] as any,
+        userLoginPending: false as boolean,
+        userLoginError: null as any,
     },
-    extraReducers: (builder :any ) => {
-      builder
-        .addCase(fetchUserProfile.pending, (state :any) => {
-          state.loading = true;
-        })
-        .addCase(fetchUserProfile.fulfilled, ({state, action} :any) => {
-          state.loading = false;
-          state.userData = action.payload;
-        })
-        .addCase(fetchUserProfile.rejected, ({state, action}:any) => {
-          state.loading = false;
-          state.error = action.error.message;
-        });
+    extraReducers: (builder) => {
+        builder
+            // .addCase(handleSignUp.pending, (state) => {
+            //     state.userLoginPending = true;
+            // })
+            // .addCase(handleSignUp.fulfilled, (state, action) => {
+            //     state.userLoginPending = false;
+            //     state.userLoginData = action.payload;
+            // })
+            // .addCase(handleSignUp.rejected, (state, action) => {
+            //     state.userLoginPending = false;
+            //     state.userLoginError = action.error.message;
+            // });
     },
-  });
-  
-  export const {} = userSlice.actions;
-  
-  export default userSlice.reducer;
+    reducers: {}
+});
+
+export default userSlice.reducer;

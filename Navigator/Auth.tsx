@@ -8,17 +8,25 @@ function Auth() {
   const [authToken, setAuthToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  console.log("authToken",authToken)
+  console.log("authToken -------------->", authToken);
+
   useEffect(() => {
     const checkAuth = async () => {
-      const token = await AsyncStorage.getItem('token');
-      setAuthToken(token);
-      setLoading(false);
+      try {
+        const token = await AsyncStorage.getItem('token');
+        
+        setAuthToken(token);
+      } catch (error) {
+        console.error("Error retrieving token: ", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     checkAuth();
   }, []);
 
+  // Show loading spinner until the auth token is retrieved
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -27,6 +35,7 @@ function Auth() {
     );
   }
 
+  // Show HomeNavigator if authToken exists, otherwise show StackNavigator
   return authToken ? <HomeNavigator /> : <StackNavigator />;
 }
 
