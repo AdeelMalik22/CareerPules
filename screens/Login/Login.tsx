@@ -27,7 +27,7 @@ const Login = () => {
     const token = "SaimRamzan"
     const myTokan = AsyncStorage.getItem('token')
     await AsyncStorage.setItem('token', token);
-    console.log("myTokan",myTokan)
+    // console.log("myTokan",myTokan)
     navigation.navigate('Home');
   }
 
